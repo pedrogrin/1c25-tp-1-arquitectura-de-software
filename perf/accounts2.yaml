@@ -7,21 +7,21 @@ config:
           host: localhost
           port: 8125
           prefix: "artillery-api"
-  http:
-    pool: 100 # All HTTP requests from all virtual users will be sent over the same connections
+
+  pool: 50 # All HTTP requests from all virtual users will be sent over the same connections
 
   phases:
     - name: Ramp
       duration: 30
-      arrivalRate: 1
-      rampTo: 5
+      arrivalRate: 10
+      rampTo: 100
     - name: Plain
       duration: 60
-      arrivalRate: 5
+      arrivalRate: 100
     
 
 scenarios:
-  - name: Rates (/rates)
+  - name: Accounts (/accounts)
     flow:
       - get:
-          url: '/rates'
+          url: '/accounts'
