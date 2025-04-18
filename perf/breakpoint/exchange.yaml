@@ -1,0 +1,66 @@
+config:
+  environments:
+    api:
+      target: 'http://localhost:5555'
+      plugins:
+        statsd:
+          host: localhost
+          port: 8125
+          prefix: "artillery-api"
+
+  http:
+    pool: 200
+  phases:
+    - name: Ramp
+      duration: 120
+      arrivalRate: 250
+      rampTo: 1000
+
+scenarios:
+  - name: Exchange ARS -> USD (/exchange)
+    weight: 25
+    flow:
+      - post:
+          url: "/exchange"
+          json:
+            baseCurrency: "ARS"
+            counterCurrency: "USD"
+            baseAmount: 10.0
+            baseAccountId: 1
+            counterAccountId: 2
+
+  - name: Exchange USD -> EUR (/exchange)
+    weight: 25
+    flow:
+      - post:
+          url: "/exchange"
+          json:
+            baseCurrency: "USD"
+            counterCurrency: "EUR"
+            baseAmount: 10.0
+            baseAccountId: 2
+            counterAccountId: 3
+
+  - name: Exchange EUR -> BRL (/exchange)
+    weight: 25
+    flow:
+      - post:
+          url: "/exchange"
+          json:
+            baseCurrency: "EUR"
+            counterCurrency: "BRL"
+            baseAmount: 10.0
+            baseAccountId: 3
+            counterAccountId: 4
+
+  - name: Exchange BRL -> ARS (/exchange)
+    weight: 25
+    flow:
+      - post:
+          url: "/exchange"
+          json:
+            baseCurrency: "BRL"
+            counterCurrency: "ARS"
+            baseAmount: 10.0
+            baseAccountId: 4
+            counterAccountId: 1
