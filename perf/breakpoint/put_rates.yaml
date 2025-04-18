@@ -1,0 +1,27 @@
+config:
+  environments:
+    api:
+      target: 'http://localhost:5555'
+      plugins:
+        statsd:
+          host: localhost
+          port: 8125
+          prefix: "artillery-api"
+
+  http:
+    pool: 200
+  phases:
+    - name: Ramp
+      duration: 120
+      arrivalRate: 250
+      rampTo: 1000
+
+scenarios:
+  - name: Update Rates (/rates PUT)
+    flow:
+      - put:
+          url: '/rates'
+          json:
+            baseCurrency: "USD"
+            counterCurrency: "ARS"
+            rate: 1064
