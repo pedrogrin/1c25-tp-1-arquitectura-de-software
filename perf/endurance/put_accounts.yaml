@@ -1,0 +1,54 @@
+config:
+  environments:
+    api:
+      target: 'http://localhost:5555'
+      plugins:
+        statsd:
+          host: localhost
+          port: 8125
+          prefix: "artillery-api"
+
+  pool: 50 # All HTTP requests from all virtual users will be sent over the same connections
+
+  phases:
+    - name: Warm-up
+      duration: 300
+      arrivalRate: 10
+      rampTo: 50
+    - name: Endurance
+      duration: 5400
+      arrivalRate: 50
+
+scenarios:
+  - name: Update Account Balance 1 (/accounts/1/balance PUT)
+    weight: 25
+    flow:
+      - put:
+          url: "/accounts/1/balance"
+          json:
+            balance: 2000000
+
+  - name: Update Account Balance 2 (/accounts/2/balance PUT)
+    weight: 25
+    flow:
+      - put:
+          url: "/accounts/2/balance"
+          json:
+            balance: 2500000
+
+  - name: Update Account Balance 3 (/accounts/3/balance PUT)
+    weight: 25
+    flow:
+      - put:
+          url: "/accounts/3/balance"
+          json:
+            balance: 3000000
+
+  - name: Update Account Balance 4 (/accounts/4/balance PUT)
+    weight: 25
+    flow:
+      - put:
+          url: "/accounts/4/balance"
+          json:
+            balance: 3500000
+
