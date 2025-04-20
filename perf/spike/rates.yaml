@@ -1,0 +1,29 @@
+config:
+  environments:
+    api:
+      target: 'http://localhost:5555'
+      plugins:
+        statsd:
+          host: localhost
+          port: 8125
+          prefix: "artillery-api"
+  http:
+    pool: 100 # All HTTP requests from all virtual users will be sent over the same connections
+
+  phases:
+    - name: Baseline
+      duration: 30
+      arrivalRate: 10
+    - name: Spike
+      duration: 10
+      arrivalRate: 500
+    - name: Recovery
+      duration: 30
+      arrivalRate: 50
+    
+
+scenarios:
+  - name: Rates (/rates)
+    flow:
+      - get:
+          url: '/rates'
