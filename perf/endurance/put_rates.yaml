@@ -16,7 +16,7 @@ config:
       arrivalRate: 10
       rampTo: 50
     - name: Endurance
-      duration: 5400
+      duration: 7200
       arrivalRate: 50
 
 scenarios:
