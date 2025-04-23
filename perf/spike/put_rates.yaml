@@ -1,0 +1,35 @@
+config:
+  environments:
+    api:
+      target: 'http://localhost:5555'
+      plugins:
+        statsd:
+          host: localhost
+          port: 8125
+          prefix: "artillery-api"
+
+  pool: 50
+
+  phases:
+    - name: Baseline
+      duration: 30
+      arrivalRate: 20
+    - name: Spike Light
+      duration: 10
+      arrivalRate: 1000
+    - name: Spike Medium
+      duration: 10
+      arrivalRate: 1500
+    - name: Recovery
+      duration: 30
+      arrivalRate: 50
+
+scenarios:
+  - name: Update Rates (/rates PUT)
+    flow:
+      - put:
+          url: '/rates'
+          json:
+            baseCurrency: "USD"
+            counterCurrency: "ARS"
+            rate: 1064
