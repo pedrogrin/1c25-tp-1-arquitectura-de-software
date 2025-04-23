@@ -13,10 +13,13 @@ config:
   phases:
     - name: Baseline
       duration: 30
-      arrivalRate: 10
-    - name: Spike
+      arrivalRate: 20
+    - name: Spike Light
       duration: 10
-      arrivalRate: 500
+      arrivalRate: 1000
+    - name: Spike Medium
+      duration: 10
+      arrivalRate: 1500
     - name: Recovery
       duration: 30
       arrivalRate: 50
