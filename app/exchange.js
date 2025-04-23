@@ -2,6 +2,16 @@ import { nanoid } from "nanoid";
 
 import { init as stateInit, getAccounts as stateAccounts, getRates as stateRates, getLog as stateLog } from "./state.js";
 
+import { StatsD } from 'hot-shots';
+const statsd = new StatsD({
+  host: 'graphite', // nombre del servicio en docker-compose
+  port: 8125,
+  prefix: 'exchange.',
+  protocol: 'udp',
+  errorHandler: (error) => console.error("StatsD error:", error)
+});
+
+
 let accounts;
 let rates;
 let log;
@@ -90,6 +100,13 @@ export async function exchange(exchangeRequest) {
         counterAccount.balance -= counterAmount;
         exchangeResult.ok = true;
         exchangeResult.counterAmount = counterAmount;
+        
+        statsd.increment(`volume.${counterCurrency}`, counterAmount);
+        statsd.increment(`volume.${baseCurrency}`, baseAmount);
+        statsd.increment(`net.${counterCurrency}`, counterAmount);
+        statsd.decrement(`net.${baseCurrency}`, baseAmount);
+
+
       } else {
         //could not transfer to clients' counter account, return base amount to client
         await transfer(baseAccount.id, clientBaseAccountId, baseAmount);
