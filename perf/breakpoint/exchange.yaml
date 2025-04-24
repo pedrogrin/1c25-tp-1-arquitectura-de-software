@@ -16,9 +16,10 @@ config:
       arrivalRate: 250
       rampTo: 1000
 
+
 scenarios:
   - name: Exchange ARS -> USD (/exchange)
-    weight: 25
+    weight: 16
     flow:
       - post:
           url: "/exchange"
@@ -29,38 +30,62 @@ scenarios:
             baseAccountId: 1
             counterAccountId: 2
 
-  - name: Exchange USD -> EUR (/exchange)
-    weight: 25
+  - name: Exchange ARS -> EUR (/exchange)
+    weight: 16
+    flow:
+      - post:
+          url: "/exchange"
+          json:
+            baseCurrency: "ARS"
+            counterCurrency: "EUR"
+            baseAmount: 10.0
+            baseAccountId: 1
+            counterAccountId: 3
+
+  - name: Exchange ARS -> BRL (/exchange)
+    weight: 16
+    flow:
+      - post:
+          url: "/exchange"
+          json:
+            baseCurrency: "ARS"
+            counterCurrency: "BRL"
+            baseAmount: 10.0
+            baseAccountId: 1
+            counterAccountId: 4
+
+  - name: Exchange USD -> ARS (/exchange)
+    weight: 16
     flow:
       - post:
           url: "/exchange"
           json:
             baseCurrency: "USD"
-            counterCurrency: "EUR"
-            baseAmount: 10.0
+            counterCurrency: "ARS"
+            baseAmount: 1.0
             baseAccountId: 2
-            counterAccountId: 3
+            counterAccountId: 1
 
-  - name: Exchange EUR -> BRL (/exchange)
-    weight: 25
+  - name: Exchange EUR -> ARS (/exchange)
+    weight: 16
     flow:
       - post:
           url: "/exchange"
           json:
             baseCurrency: "EUR"
-            counterCurrency: "BRL"
+            counterCurrency: "ARS"
             baseAmount: 10.0
             baseAccountId: 3
-            counterAccountId: 4
+            counterAccountId: 1
 
   - name: Exchange BRL -> ARS (/exchange)
-    weight: 25
+    weight: 16
     flow:
       - post:
           url: "/exchange"
           json:
             baseCurrency: "BRL"
             counterCurrency: "ARS"
-            baseAmount: 10.0
+            baseAmount: 5.0
             baseAccountId: 4
             counterAccountId: 1
