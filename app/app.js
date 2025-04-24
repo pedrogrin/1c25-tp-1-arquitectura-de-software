@@ -19,46 +19,55 @@ app.use(express.json());
 
 // ACCOUNT endpoints
 
-app.get("/accounts", (req, res) => {
-  res.json(getAccounts());
+app.get("/accounts", async (req, res) => {
+  res.json(await getAccounts());
 });
 
-app.put("/accounts/:id/balance", (req, res) => {
+app.put("/accounts/:id/balance", async (req, res) => {
   const accountId = req.params.id;
   const { balance } = req.body;
 
-  if (!accountId || !balance) {
+  if (!accountId || balance == null) {
     return res.status(400).json({ error: "Malformed request" });
-  } else {
-    setAccountBalance(accountId, balance);
-
-    res.json(getAccounts());
   }
+
+  await setAccountBalance(accountId, balance);
+  res.json(await getAccounts());
 });
 
 // RATE endpoints
 
-app.get("/rates", (req, res) => {
-  res.json(getRates());
+app.get("/rates", async (req, res) => {
+  res.json(await getRates());
 });
 
-app.put("/rates", (req, res) => {
+app.put("/rates", async (req, res) => {
   const { baseCurrency, counterCurrency, rate } = req.body;
 
-  if (!baseCurrency || !counterCurrency || !rate) {
+  if (!baseCurrency || !counterCurrency || rate == null) {
     return res.status(400).json({ error: "Malformed request" });
   }
 
-  const newRateRequest = { ...req.body };
-  setRate(newRateRequest);
-
-  res.json(getRates());
+  await setRate({ baseCurrency, counterCurrency, rate });
+  res.json(await getRates());
 });
 
 // LOG endpoint
 
-app.get("/log", (req, res) => {
-  res.json(getLog());
+app.get("/log", async (req, res) => {
+
+  if (req.query.limit) {
+    const limit = parseInt(req.query.limit, 10);
+    
+    if (isNaN(limit)) {
+      return res.status(400).json({ error: "Invalid limit parameter" });
+    }
+
+    return res.json(await getLog(limit));
+
+  }
+
+  res.json(await getLog());
 });
 
 // EXCHANGE endpoint

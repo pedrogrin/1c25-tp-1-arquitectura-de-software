@@ -1,6 +1,11 @@
 services:
     api:
-      build: ./app
+        build: ./app
+        depends_on:
+            - redis
+        environment:
+            - REDIS_HOST=redis
+            - REDIS_PORT=6379
 
     nginx:
         image: nginx:1.27.4
@@ -42,6 +47,18 @@ services:
             - "/sys:/sys:ro"
             - "/var/lib/docker/:/var/lib/docker:ro"
 
+    redis:
+        image: redis:7.2
+        ports:
+            - "6379:6379"
+        volumes:
+            - redis_data:/data
+        restart: unless-stopped
+
+
 volumes:
     grafana_config:
         driver: local
+    redis_data:
+        driver: local
+
