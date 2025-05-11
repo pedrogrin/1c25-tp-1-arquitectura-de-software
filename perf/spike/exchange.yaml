@@ -8,13 +8,21 @@ config:
           port: 8125
           prefix: "artillery-api"
 
-  http:
-    pool: 200
+  pool: 50 # All HTTP requests from all virtual users will be sent over the same connections
+
   phases:
-    - name: Ramp
-      duration: 120
-      arrivalRate: 250
-      rampTo: 1000
+    - name: Baseline
+      duration: 30
+      arrivalRate: 20
+    - name: Spike Light
+      duration: 10
+      arrivalRate: 1000
+    - name: Spike Medium
+      duration: 10
+      arrivalRate: 1500
+    - name: Recovery
+      duration: 30
+      arrivalRate: 50
 
 scenarios:
   - name: Exchange ARS -> USD (/exchange)
